@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#141519">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Just One">
+<title>Just One — Mobile</title>
+<meta name="description" content="Just One en version mobile : joue solo contre des robots ou entre amis sur le même appareil. Jeu coopératif, 13 cartes, un seul mot d'indice.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <section id="screen-home" class="screen active">
+    <div class="home-hero">
+      <div class="logo-badge">JUST<br><span>ONE</span></div>
+      <h1>Just One <em>mobile</em></h1>
+      <p class="tagline">Le jeu coopératif où vous faites deviner un mot mystère<br>avec <strong>un seul mot</strong> d'indice — les doublons sont annulés&nbsp;!</p>
+    </div>
+    <div class="home-actions" id="home-actions">
+      <button class="btn btn-primary btn-big" id="btn-continue" style="display:none">▶ Continuer la partie</button>
+      <button class="btn btn-primary btn-big" id="btn-solo">🤖 Partie solo <small>(toi contre 3 robots)</small></button>
+      <button class="btn btn-secondary btn-big" id="btn-multi">👥 Entre amis <small>(2 à 7 joueurs, même appareil)</small></button>
+      <button class="btn btn-ghost" id="btn-rules">📜 Règles du jeu</button>
+      <p class="best-line" id="best-line"></p>
+    </div>
+    <p class="footnote">Projet fan non officiel inspiré de <em>Just One</em> (Ludovic Roudy &amp; Bruno Sautter, Repos Production). Fonctionne hors-ligne après le premier chargement.</p>
+  </section>
+
+  <section id="screen-setup" class="screen">
+    <header class="bar">
+      <button class="btn btn-ghost btn-small" id="btn-setup-back">← Retour</button>
+      <h2 id="setup-title">Nouvelle partie</h2>
+      <span class="bar-spacer"></span>
+    </header>
+    <div class="setup-body" id="setup-body"></div>
+  </section>
+
+  <section id="screen-game" class="screen">
+    <header class="topbar">
+      <button class="btn btn-ghost btn-small" id="btn-quit" title="Abandonner la partie">✕</button>
+      <div class="topbar-stats">
+        <span class="stat" id="stat-card">Carte 1/13</span>
+        <span class="stat stat-score" id="stat-score">Score 0</span>
+      </div>
+      <span class="bar-spacer"></span>
+    </header>
+    <div class="players-chips" id="players-chips"></div>
+    <main class="game-body" id="game-body"></main>
+  </section>
+
+  <section id="screen-end" class="screen">
+    <div class="end-body" id="end-body"></div>
+  </section>
+
+</div>
+
+<div id="rules-overlay" class="overlay" hidden>
+  <div class="overlay-card">
+    <button class="btn btn-ghost btn-small overlay-close" id="btn-rules-close">✕ Fermer</button>
+    <h2>📜 Règles de Just One</h2>
+    <div class="rules-text">
+      <p><strong>But :</strong> en équipe, faites deviner un maximum de <strong>13 mots mystères</strong>. Chaque bonne réponse rapporte <strong>1 point</strong>.</p>
+      <p><strong>Déroulement d’une manche :</strong></p>
+      <ol>
+        <li>Un joueur est désigné <strong>devineur</strong> (à tour de rôle). Il ne voit pas le mot.</li>
+        <li>Tous les autres écrivent <strong>en secret un seul mot</strong> comme indice, sans se concerter.</li>
+        <li>On révèle les indices : ceux écrits <strong>plusieurs fois à l’identique sont annulés</strong>.</li>
+        <li>Le devineur voit les indices restants et n’a droit qu’à <strong>une seule tentative</strong> — ou il peut <strong>passer</strong>.</li>
+      </ol>
+      <p><strong>Résultats :</strong></p>
+      <ul>
+        <li>✅ Bonne réponse : <strong>+1 point</strong>, la carte est gagnée.</li>
+        <li>❌ Mauvaise réponse : la carte en cours <strong>et la suivante</strong> sont perdues.</li>
+        <li>🤐 Passer : seule la carte en cours est perdue.</li>
+      </ul>
+      <p><strong>Variantes :</strong> à 2 ou 3 joueurs, chacun écrit <strong>2 indices</strong> par manche. En <strong>solo</strong> ici, tu es toujours le devineur et 3 robots écrivent les indices.</p>
+      <p><strong>Barème final</strong> (cartes gagnées sur 13) : 13 parfait 🏆 · 12 incroyable · 11 excellent · 9-10 très beau · 7-8 dans la moyenne · 4-6 bon début · 0-3 à retenter&nbsp;!</p>
+    </div>
+  </div>
+</div>
+
+<script src="js/words.js" defer></script>
+<script src="js/engine.js" defer></script>
+<script src="js/app.js" defer></script>
+</body>
+</html>
