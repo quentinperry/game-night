@@ -1,4 +1,4 @@
-/* Interface de Just One — Mobile (projet fan, non officiel). */
+/* Interface de Just One mobile (projet de fan non officiel). */
 /* global JUST_ONE_WORDS, JustOneEngine */
 (function () {
   'use strict';
@@ -45,12 +45,12 @@
     const btn = $('#btn-continue');
     if (saved && !saved.over) {
       btn.style.display = '';
-      btn.innerHTML = '▶ Continuer la partie <small>Carte ' + E.cardNumber(saved) + '/13 · score ' + saved.score + '</small>';
+      btn.innerHTML = 'Continuer la partie <small>Carte ' + E.cardNumber(saved) + '/13 · score ' + saved.score + '</small>';
     } else {
       btn.style.display = 'none';
     }
     const b = best();
-    $('#best-line').textContent = b > 0 ? '🏅 Meilleur score : ' + b + '/13' : '';
+    $('#best-line').textContent = b > 0 ? 'Meilleur score : ' + b + '/13' : '';
     show('screen-home');
   }
 
@@ -61,14 +61,14 @@
     body.innerHTML = '';
     if (setupMode === 'online') {
       body.innerHTML =
-        '<p class="setup-note">🌐 Chacun sur <strong>son propre appareil</strong> : l’hôte crée un salon et partage le <strong>code de partie</strong>, les autres le rejoignent. Connexion directe WebRTC entre appareils (signalisation via ntfy.sh) — aucun compte, aucun serveur de jeu.</p>' +
+        '<p class="setup-note">Chacun joue sur <strong>son appareil</strong>. L’hôte crée un salon et partage le <strong>code</strong>, les autres le rejoignent. Connexion directe entre appareils, sans compte ni serveur de jeu.</p>' +
         '<div><div class="setup-label">Ton pseudo</div>' +
         '<div class="field"><input id="online-name" maxlength="14" value="Joueur" autocomplete="off"></div></div>' +
-        '<button class="btn btn-primary btn-big" id="btn-create">🎮 Créer une partie</button>' +
+        '<button class="btn btn-primary btn-big" id="btn-create">Créer une partie</button>' +
         '<div style="height:8px"></div>' +
         '<div><div class="setup-label">Rejoindre avec un code</div>' +
         '<div class="field"><input id="online-code" maxlength="8" placeholder="CODE" autocomplete="off" style="text-transform:uppercase;text-align:center;letter-spacing:5px;font-weight:800"></div></div>' +
-        '<button class="btn btn-secondary btn-big" id="btn-join">🚪 Rejoindre la partie</button>';
+        '<button class="btn btn-secondary btn-big" id="btn-join">Rejoindre</button>';
       $('#btn-create').addEventListener('click', function () {
         const name = ($('#online-name').value || 'Joueur').trim() || 'Joueur';
         startOnlineHost(name);
@@ -81,10 +81,10 @@
       });
     } else if (setupMode === 'solo') {
       body.innerHTML =
-        '<p class="setup-note">🤖 Tu es <strong>toujours le devineur</strong> : à chaque carte, 3 robots écrivent chacun un indice d’un seul mot (les doublons sont annulés, comme dans le vrai jeu). À toi de trouver le mot mystère en <strong>une seule tentative</strong> !</p>' +
+        '<p class="setup-note">Tu es <strong>toujours le devineur</strong>. À chaque carte, 3 robots écrivent un indice. Trouve le mot mystère en <strong>une seule tentative</strong>.</p>' +
         '<div><div class="setup-label">Ton pseudo</div>' +
         '<div class="field"><input id="solo-name" maxlength="14" value="Toi" autocomplete="off"></div></div>' +
-        '<button class="btn btn-primary btn-big" id="btn-start">🃏 C’est parti !</button>';
+        '<button class="btn btn-primary btn-big" id="btn-start">C’est parti !</button>';
       $('#btn-start').addEventListener('click', function () {
         const name = ($('#solo-name').value || 'Toi').trim() || 'Toi';
         startGame('solo', [
@@ -96,7 +96,7 @@
       });
     } else {
       body.innerHTML =
-        '<p class="setup-note">👥 Chacun joue à tour de rôle sur <strong>ce même appareil</strong> : l’appli te dira quand passer le téléphone. Le devineur ferme les yeux pendant que les autres écrivent leurs indices.</p>' +
+        '<p class="setup-note">Tout le monde joue sur <strong>le même appareil</strong>. L’appli indique quand le passer. Le devineur ferme les yeux pendant que les autres écrivent.</p>' +
         '<div><div class="setup-label">Nombre de joueurs (2 à 7)</div>' +
         '<div class="stepper">' +
         '<button id="step-down" aria-label="moins">−</button>' +
@@ -104,7 +104,7 @@
         '<button id="step-up" aria-label="plus">+</button>' +
         '</div></div>' +
         '<div><div class="setup-label">Pseudos</div><div class="name-grid" id="name-grid"></div></div>' +
-        '<button class="btn btn-primary btn-big" id="btn-start">🃏 C’est parti !</button>';
+        '<button class="btn btn-primary btn-big" id="btn-start">C’est parti !</button>';
       const grid = $('#name-grid');
       for (let i = 0; i < setupCount; i++) {
         const d = document.createElement('div');
@@ -175,7 +175,7 @@
       const c = document.createElement('span');
       c.className = 'chip' + (i === G.guesserIndex ? ' guesser' : '');
       c.style.setProperty('--pc', 'var(--p' + (i % 7) + ')');
-      c.textContent = (i === G.guesserIndex ? '👑 ' : (p.bot ? '🤖 ' : '')) + p.name;
+      c.textContent = (i === G.guesserIndex ? '👑 ' : '') + p.name;
       chips.appendChild(c);
     });
     const body = $('#game-body');
@@ -223,9 +223,9 @@
       '<div class="eyes">' + (see ? '👀' : '🙈') + '</div>' +
       '<h2>Passe l’appareil à <span class="big-name">' + esc(g.name) + '</span></h2>' +
       '<p>' + (see
-        ? 'Tu es le devineur : <b>ouvre les yeux</b>, les indices t’attendent.'
-        : 'Tu seras le <b>devineur</b> : ferme les yeux, <b>ne regarde pas le mot mystère</b> !') + '</p>' +
-      '<button class="btn btn-primary btn-big" id="btn-pass">' + (see ? '👀 Je suis ' + esc(g.name) + ', j’ouvre les yeux' : '🙈 Je suis ' + esc(g.name) + ', je ferme les yeux') + '</button>'
+        ? 'Tu es le devineur : <b>ouvre les yeux</b>.'
+        : 'Tu es le <b>devineur</b> : ferme les yeux et <b>ne regarde pas le mot</b>.') + '</p>' +
+      '<button class="btn btn-primary btn-big" id="btn-pass">' + (see ? 'Je suis ' + esc(g.name) + ', j’ouvre les yeux' : 'Je suis ' + esc(g.name) + ', je ferme les yeux') + '</button>'
     ));
     $('#btn-pass', body).addEventListener('click', function () {
       ui.phase = see ? 'guess' : 'clue';
@@ -243,11 +243,11 @@
       '<div class="eyes">✍️</div>' +
       '<h2>Passe l’appareil à <span class="big-name">' + esc(giver.name) + '</span></h2>' +
       '<div class="result-word"><span>' + esc(E.currentCard(G).w) + '</span></div>' +
-      '<p class="result-detail">Mot à faire deviner — ne le montre pas au devineur (' + esc(E.guesser(G).name) + ') !</p>' +
-      '<p>Écris <b>un seul mot</b> pour aider <b>' + esc(E.guesser(G).name) + '</b> à deviner.<br>Pas de concertation, et évite l’indice trop évident… les doublons sont annulés !</p>' +
+      '<p class="result-detail">Ne le montre pas à ' + esc(E.guesser(G).name) + '.</p>' +
+      '<p>Écris <b>un seul mot</b> pour aider <b>' + esc(E.guesser(G).name) + '</b>. Évite l’indice trop évident : les doublons sont annulés.</p>' +
       '<input class="clue-input" id="clue-input" maxlength="30" placeholder="ton indice" autocomplete="off" autocapitalize="off">' +
       '<div class="field-error" id="clue-error"></div>' +
-      '<button class="btn btn-primary btn-big" id="btn-clue">✓ J’ai noté mon indice</button>'
+      '<button class="btn btn-primary btn-big" id="btn-clue">Valider mon indice</button>'
     );
     body.appendChild(p);
     const input = $('#clue-input', p);
@@ -288,9 +288,8 @@
     const p = panel(
       '<div class="eyes">🃏</div>' +
       '<div class="result-word"><span>' + esc(E.currentCard(G).w) + '</span></div>' +
-      '<p class="result-detail">Mot à faire deviner</p>' +
-      '<h2>Tous les indices sont écrits !</h2>' +
-      '<p>Les indices identiques ont été <b>annulés</b> (barrés ci-dessous).</p>'
+      '<h2>Indices écrits</h2>' +
+      '<p>Les doublons sont <b>annulés</b> et barrés.</p>'
     );
     const list = document.createElement('div');
     list.className = 'clue-list';
@@ -299,7 +298,7 @@
     const btn = document.createElement('button');
     btn.className = 'btn btn-primary btn-big';
     btn.id = 'btn-reveal';
-    btn.textContent = '📋 Passer à ' + g.name + ' (devineur)';
+    btn.textContent = 'Passer à ' + g.name;
     p.appendChild(btn);
     body.appendChild(p);
     btn.addEventListener('click', function () { ui.phase = 'pass-see'; renderGame(); });
@@ -309,8 +308,8 @@
     body.appendChild(panel(
       '<div class="eyes">🤖</div>' +
       '<h2>Carte n°' + E.cardNumber(G) + '</h2>' +
-      '<p>Les 3 robots écrivent leurs indices en secret…<br>Prêt·e à deviner le mot mystère ?</p>' +
-      '<button class="btn btn-primary btn-big" id="btn-ready">🃏 Oui, montre-moi les indices !</button>'
+      '<p>Les robots écrivent leurs indices.</p>' +
+      '<button class="btn btn-primary btn-big" id="btn-ready">Voir les indices</button>'
     ));
     $('#btn-ready', body).addEventListener('click', function () {
       const card = E.currentCard(G);
@@ -329,13 +328,12 @@
     const rev = ui.reveal || E.revealClues(G);
     ui.reveal = rev;
     const p = panel(
-      '<div class="progress">Carte ' + E.cardNumber(G) + '/' + E.TOTAL_CARDS + ' · devineur : <b>' + esc(g.name) + '</b></div>' +
-      '<h2>Quels indices restent-ils ?</h2>'
+      '<h2>Les indices</h2>'
     );
     const chips = document.createElement('div');
     chips.className = 'clue-chips';
     if (rev.kept.length === 0) {
-      chips.innerHTML = '<span class="clue-chip clue-none">😱 Aucun !</span>';
+      chips.innerHTML = '<span class="clue-chip clue-none">Aucun indice</span>';
     } else {
       rev.kept.forEach(function (c) {
         const s = document.createElement('span');
@@ -350,16 +348,16 @@
       const s = n > 1 ? 's' : '';
       const line = document.createElement('p');
       line.className = 'removed-line';
-      line.textContent = '🚫 ' + n + ' indice' + s + ' annulé' + s + ' (doublon' + s + ') — retiré' + s + ' avant de te montrer les indices.';
+      line.textContent = n + ' doublon' + s + ' retiré' + s + '.';
       p.appendChild(line);
     }
     p.insertAdjacentHTML('beforeend',
-      '<p style="margin-top:14px"><b>Une seule tentative</b> pour trouver le mot mystère :</p>' +
+      '<p style="margin-top:14px"><b>Une seule tentative.</b></p>' +
       '<input class="guess-input" id="guess-input" maxlength="40" placeholder="ta réponse" autocomplete="off" autocapitalize="off">' +
       '<div class="field-error" id="guess-error"></div>');
     const row = document.createElement('div');
     row.className = 'btn-row';
-    row.innerHTML = '<button class="btn btn-ghost" id="btn-pass-round">🤐 Passer</button><button class="btn btn-primary" id="btn-guess">🎯 Deviner !</button>';
+    row.innerHTML = '<button class="btn btn-ghost" id="btn-pass-round">Passer</button><button class="btn btn-primary" id="btn-guess">Deviner</button>';
     p.appendChild(row);
     body.appendChild(p);
     const input = $('#guess-input', p);
@@ -410,13 +408,12 @@
       '<p>' + (e.result === 'wrong' && e.guess ? 'Ta réponse : « ' + esc(e.guess) + ' »' : '') + '</p>' +
       '</div>' +
       '<div class="result-word"><span>' + esc(e.word) + '</span></div>' +
-      '<p class="result-detail">' + detail + '</p>' +
-      '<p class="result-detail">Score : <b style="color:var(--accent)">' + G.score + ' / ' + E.TOTAL_CARDS + '</b> · cartes restantes : ' + G.deck.length + '</p>'
+      '<p class="result-detail">' + detail + '</p>'
     );
     const btn = document.createElement('button');
     btn.className = 'btn btn-primary btn-big';
     btn.id = 'btn-next';
-    btn.textContent = G.over ? '🏁 Voir le score final' : '➜ Carte suivante';
+    btn.textContent = G.over ? 'Voir le score final' : 'Carte suivante';
     p.appendChild(btn);
     body.appendChild(p);
     btn.addEventListener('click', function () {
@@ -433,19 +430,19 @@
       const icon = h.result === 'ok' ? '✅' : (h.result === 'wrong' ? '❌' : '🤐');
       const kept = h.clues.filter(function (c) { return !c.removed; }).length;
       return '<div class="history-row"><span class="h-icon">' + icon + '</span>' +
-        '<span class="h-word">' + esc(h.word || '—') + '</span>' +
+        '<span class="h-word">' + esc(h.word || '?') + '</span>' +
         '<span class="h-clues">' + kept + '/' + h.clues.length + ' indices</span></div>';
     }).join('');
     $('#end-body').innerHTML =
       '<div class="end-score-card">' +
       '<div class="end-kicker">Score final</div>' +
       '<div class="end-ring" style="--p:' + (G.score / E.TOTAL_CARDS) + '"><div class="end-score">' + G.score + '<small>/' + E.TOTAL_CARDS + '</small></div></div>' +
-      '<div class="end-rating">' + rating.emoji + ' ' + rating.label + '</div>' +
-      '<div class="end-best">🏅 Record : ' + best() + '/' + E.TOTAL_CARDS + '</div>' +
+      '<div class="end-rating">' + rating.label + '</div>' +
+      '<div class="end-best">Record : ' + best() + '/' + E.TOTAL_CARDS + '</div>' +
       '</div>' +
       '<div class="history"><div class="history-title">Détail des ' + G.history.length + ' manches</div>' + rows + '</div>' +
-      '<div class="btn-row"><button class="btn btn-ghost" id="btn-home">🏠 Accueil</button>' +
-      '<button class="btn btn-primary" id="btn-replay">🔁 Rejouer</button></div>';
+      '<div class="btn-row"><button class="btn btn-ghost" id="btn-home">Accueil</button>' +
+      '<button class="btn btn-primary" id="btn-replay">Rejouer</button></div>';
     show('screen-end');
     $('#btn-home').addEventListener('click', function () { G = null; renderHome(); });
     $('#btn-replay').addEventListener('click', function () { startGame(G.mode, G.players); });
@@ -495,7 +492,7 @@
         if (!hs) return;
         if (hs.phase !== 'lobby') {
           const dc = net.dcs[peerId];
-          if (dc && dc.readyState === 'open') dc.send(JSON.stringify({ t: 'aborted', reason: 'Partie déjà en cours — reviens plus tard !' }));
+          if (dc && dc.readyState === 'open') dc.send(JSON.stringify({ t: 'aborted', reason: 'Partie déjà en cours.' }));
           net._dropPeer(peerId);
           return;
         }
@@ -629,7 +626,7 @@
     if (!v) return;
     show('screen-game');
     const inLobby = v.phase === 'lobby';
-    $('#stat-card').textContent = inLobby ? '🌐 Salon ' + (v.code || '') : 'Carte ' + v.cardNumber + '/' + v.totalCards;
+    $('#stat-card').textContent = inLobby ? 'Salon ' + (v.code || '') : 'Carte ' + v.cardNumber + '/' + v.totalCards;
     $('#stat-score').textContent = 'Score ' + v.score;
     renderTrack(v.history, v.totalCards, inLobby);
     const chips = $('#players-chips');
@@ -653,15 +650,15 @@
   function renderOnlineLobby(body, v) {
     const p = panel(
       '<div class="eyes">🌐</div><h2>Salon en ligne</h2>' +
-      '<p>Partage ce code avec tes amis :</p>' +
+      '<p>Partage ce code :</p>' +
       '<div class="room-code">' + esc(v.code) + '</div>'
     );
     const copy = document.createElement('button');
     copy.className = 'btn btn-ghost btn-small';
-    copy.textContent = '📋 Copier le code';
+    copy.textContent = 'Copier le code';
     copy.style.margin = '0 auto 14px';
     copy.addEventListener('click', function () {
-      const done = function () { copy.textContent = '✅ Copié !'; setTimeout(function () { copy.textContent = '📋 Copier le code'; }, 1500); };
+      const done = function () { copy.textContent = 'Copié'; setTimeout(function () { copy.textContent = 'Copier le code'; }, 1500); };
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(v.code).then(done, done);
       else done();
     });
@@ -671,24 +668,24 @@
     v.players.forEach(function (pl, i) {
       const d = document.createElement('div');
       d.className = 'clue-item';
-      d.innerHTML = '<div style="flex:1"><div class="clue-word" style="font-size:18px">' + esc(pl.name) + (i === v.you ? ' (toi)' : '') + (i === 0 ? ' 👑 hôte' : '') + '</div></div>';
+      d.innerHTML = '<div style="flex:1"><div class="clue-word" style="font-size:18px">' + esc(pl.name) + (i === v.you ? ' (toi)' : '') + (i === 0 ? ' (hôte)' : '') + '</div></div>';
       list.appendChild(d);
     });
     p.appendChild(list);
     const note = document.createElement('p');
-    note.textContent = v.players.length < 2 ? 'En attente d’autres joueurs… (2 à 7 joueurs)' : v.players.length + ' joueur(s) dans le salon.';
+    note.textContent = v.players.length < 2 ? 'En attente d’autres joueurs (2 à 7).' : '';
     p.appendChild(note);
     if (v.isHost) {
       const b = document.createElement('button');
       b.className = 'btn btn-primary btn-big';
       b.id = 'btn-online-start';
-      b.textContent = '🃏 Lancer la partie';
+      b.textContent = 'Lancer la partie';
       b.disabled = v.players.length < 2;
       b.addEventListener('click', hostStart);
       p.appendChild(b);
     } else {
       const w = document.createElement('p');
-      w.textContent = '⏳ En attente que l’hôte lance la partie…';
+      w.textContent = 'L’hôte va lancer la partie.';
       p.appendChild(w);
     }
     body.appendChild(p);
@@ -701,14 +698,13 @@
         '<div class="eyes">✍️</div>' +
         '<h2>À toi, ' + esc(v.players[v.you].name) + ' !</h2>' +
         '<div class="result-word"><span>' + esc(v.word || '') + '</span></div>' +
-        '<p class="result-detail">Mot à faire deviner</p>' +
-        '<p>Écris <b>un seul mot</b> pour aider <b>' + esc(v.players[v.guesserIndex].name) + '</b> à deviner.<br>Les doublons seront annulés !</p>' +
+        '<p>Écris <b>un seul mot</b> pour aider <b>' + esc(v.players[v.guesserIndex].name) + '</b>. Les doublons sont annulés.</p>' +
         '<input class="clue-input" id="online-clue" maxlength="30" placeholder="ton indice" autocomplete="off" autocapitalize="off">' +
         '<div class="field-error" id="online-clue-error"></div>'
       );
       const b = document.createElement('button');
       b.className = 'btn btn-primary btn-big';
-      b.textContent = '✓ Envoyer mon indice';
+      b.textContent = 'Envoyer mon indice';
       p.appendChild(b);
       body.appendChild(p);
       const input = $('#online-clue', p);
@@ -728,9 +724,8 @@
       body.appendChild(panel(
         '<div class="eyes">⏳</div>' +
         '<div class="result-word"><span>' + esc(v.word || '') + '</span></div>' +
-        '<p class="result-detail">Mot à faire deviner</p>' +
-        '<h2>En attente des indices…</h2>' +
-        '<p>' + v.submittedCount + ' / ' + v.giversTotal + ' écrits.<br>Devineur : <b>' + esc(v.players[v.guesserIndex].name) + '</b></p>'
+        '<h2>En attente des indices</h2>' +
+        '<p>' + v.submittedCount + ' / ' + v.giversTotal + ' écrits. Devineur : <b>' + esc(v.players[v.guesserIndex].name) + '</b>.</p>'
       ));
     }
   }
@@ -741,9 +736,8 @@
       const p = panel(
         '<div class="eyes">🃏</div>' +
         '<div class="result-word"><span>' + esc(v.word || '') + '</span></div>' +
-        '<p class="result-detail">Mot à faire deviner</p>' +
         '<h2>Les indices écrits</h2>' +
-        '<p>Devineur : <b>' + esc(v.players[v.guesserIndex].name) + '</b> réfléchit…</p>'
+        '<p><b>' + esc(v.players[v.guesserIndex].name) + '</b> réfléchit.</p>'
       );
       const list = document.createElement('div');
       list.className = 'clue-list';
@@ -760,13 +754,12 @@
       return;
     }
     const p = panel(
-      '<div class="progress">Carte ' + v.cardNumber + '/' + v.totalCards + ' · devineur : <b>toi</b></div>' +
-      '<h2>Quels indices restent-ils ?</h2>'
+            '<h2>Les indices</h2>'
     );
     const chips = document.createElement('div');
     chips.className = 'clue-chips';
     if (!v.clues.length) {
-      chips.innerHTML = '<span class="clue-chip clue-none">😱 Aucun !</span>';
+      chips.innerHTML = '<span class="clue-chip clue-none">Aucun indice</span>';
     } else {
       v.clues.forEach(function (c) {
         const s = document.createElement('span');
@@ -780,16 +773,16 @@
       const line = document.createElement('p');
       line.className = 'removed-line';
       const s = v.removedCount > 1 ? 's' : '';
-      line.textContent = '🚫 ' + v.removedCount + ' indice' + s + ' annulé' + s + ' (doublon' + s + ') — retiré' + s + ' avant de te montrer les indices.';
+      line.textContent = v.removedCount + ' doublon' + s + ' retiré' + s + '.';
       p.appendChild(line);
     }
     p.insertAdjacentHTML('beforeend',
-      '<p style="margin-top:14px"><b>Une seule tentative</b> pour trouver le mot mystère :</p>' +
+      '<p style="margin-top:14px"><b>Une seule tentative.</b></p>' +
       '<input class="guess-input" id="online-guess" maxlength="40" placeholder="ta réponse" autocomplete="off" autocapitalize="off">' +
       '<div class="field-error" id="online-guess-error"></div>');
     const row = document.createElement('div');
     row.className = 'btn-row';
-    row.innerHTML = '<button class="btn btn-ghost" id="online-pass">🤐 Passer</button><button class="btn btn-primary" id="online-guess-btn">🎯 Deviner !</button>';
+    row.innerHTML = '<button class="btn btn-ghost" id="online-pass">Passer</button><button class="btn btn-primary" id="online-guess-btn">Deviner</button>';
     p.appendChild(row);
     body.appendChild(p);
     const input = $('#online-guess', p);
@@ -812,14 +805,13 @@
     else { cls = 'pass'; emoji = '🤐'; title = 'Passé'; detail = 'Seule la carte en cours est perdue.'; }
     const p = panel(
       '<div class="result-banner ' + cls + '"><div class="emoji">' + emoji + '</div><h2>' + title + '</h2>' +
-      (r.guess ? '<p>Réponse donnée : « ' + esc(r.guess) + ' »</p>' : '') + '</div>' +
+      (r.guess ? '<p>Réponse : « ' + esc(r.guess) + ' »</p>' : '') + '</div>' +
       '<div class="result-word"><span>' + esc(r.word || '') + '</span></div>' +
-      '<p class="result-detail">' + detail + '</p>' +
-      '<p class="result-detail">Score : <b style="color:var(--accent)">' + v.score + ' / ' + v.totalCards + '</b> · cartes restantes : ' + v.deckCount + '</p>'
+      '<p class="result-detail">' + detail + '</p>'
     );
     const b = document.createElement('button');
     b.className = 'btn btn-primary btn-big';
-    b.textContent = v.over ? '🏁 Voir le score final' : '➜ Carte suivante';
+    b.textContent = v.over ? 'Voir le score final' : 'Carte suivante';
     b.addEventListener('click', function () { sendAction({ t: 'next' }); });
     p.appendChild(b);
     body.appendChild(p);
@@ -830,7 +822,7 @@
     const rows = v.history.map(function (h) {
       const icon = h.result === 'ok' ? '✅' : (h.result === 'wrong' ? '❌' : '🤐');
       return '<div class="history-row"><span class="h-icon">' + icon + '</span>' +
-        '<span class="h-word">' + esc(h.word || '—') + '</span>' +
+        '<span class="h-word">' + esc(h.word || '?') + '</span>' +
         '<span class="h-clues">' + h.kept + '/' + h.total + ' indices</span></div>';
     }).join('');
     const d = document.createElement('div');
@@ -838,10 +830,10 @@
       '<div class="end-score-card">' +
       '<div class="end-kicker">Score final</div>' +
       '<div class="end-ring" style="--p:' + (v.score / v.totalCards) + '"><div class="end-score">' + v.score + '<small>/' + v.totalCards + '</small></div></div>' +
-      '<div class="end-rating">' + rating.emoji + ' ' + rating.label + '</div></div>' +
+      '<div class="end-rating">' + rating.label + '</div></div>' +
       '<div class="history"><div class="history-title">Détail des ' + v.history.length + ' manches</div>' + rows + '</div>' +
-      '<div class="btn-row"><button class="btn btn-ghost" id="online-home">🏠 Accueil</button>' +
-      '<button class="btn btn-primary" id="online-replay">🔁 Rejouer</button></div>';
+      '<div class="btn-row"><button class="btn btn-ghost" id="online-home">Accueil</button>' +
+      '<button class="btn btn-primary" id="online-replay">Rejouer</button></div>';
     body.appendChild(d);
     $('#online-home', d).addEventListener('click', function () { leaveOnline(); renderHome(); });
     $('#online-replay', d).addEventListener('click', function () { sendAction({ t: 'replay' }); });

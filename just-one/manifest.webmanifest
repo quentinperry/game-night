@@ -1,7 +1,7 @@
 {
-  "name": "Just One — Mobile",
+  "name": "Just One mobile",
   "short_name": "Just One",
-  "description": "Just One en version mobile : solo contre des robots ou entre amis sur le même appareil. Coopératif, 13 cartes, un seul mot d'indice.",
+  "description": "Jeu coopératif, 13 cartes, un seul mot d'indice. Solo, entre amis ou en ligne.",
   "lang": "fr",
   "dir": "ltr",
   "start_url": ".",

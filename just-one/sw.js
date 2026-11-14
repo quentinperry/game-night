@@ -1,4 +1,4 @@
-/* Service worker Just One — Mobile : cache local pour jouer hors-ligne. */
+/* Service worker de Just One mobile : cache local pour jouer hors-ligne. */
 const CACHE = 'just-one-v2';
 const ASSETS = [
   './',
