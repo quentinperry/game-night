@@ -42,7 +42,7 @@ Puis « Ajouter à l'écran d'accueil » : l'appli devient installable et foncti
 ```
 index.html            structure des écrans + règles
 css/style.css         thème mobile (dark, tactile)
-js/words.js           banque de 363 mots FR (noms communs et propres, sélection inspirée de la liste Wikipédia « Articles que toutes les encyclopédies devraient avoir ») + indices d'un mot pour les robots
+js/words.js           banque de 226 mots FR (sélection inspirée de la liste Wikipédia « Articles que toutes les encyclopédies devraient avoir », mots trop simples du quotidien retirés) + indices d'un mot pour les robots
 js/engine.js          moteur pur (navigateur + Node) : manches, doublons, score, barème
 js/app.js             interface : écrans, pass-and-play, solo, sauvegarde
 manifest.webmanifest  + icon.svg + sw.js   packaging PWA / hors-ligne
