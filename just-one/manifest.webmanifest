@@ -1,0 +1,17 @@
+{
+  "name": "Just One — Mobile",
+  "short_name": "Just One",
+  "description": "Just One en version mobile : solo contre des robots ou entre amis sur le même appareil. Coopératif, 13 cartes, un seul mot d'indice.",
+  "lang": "fr",
+  "dir": "ltr",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#141519",
+  "theme_color": "#141519",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "icon.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}
