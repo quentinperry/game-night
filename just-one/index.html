@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#141519">
+<meta name="theme-color" content="#1a1236">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -13,6 +13,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon.svg">
+<link rel="preload" href="fonts/fredoka.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -20,9 +21,14 @@
 
   <section id="screen-home" class="screen active">
     <div class="home-hero">
-      <div class="logo-badge">JUST<br><span>ONE</span></div>
+      <div class="logo" aria-hidden="true">
+        <div class="logo-card logo-card-back"></div>
+        <div class="logo-card logo-card-mid"></div>
+        <div class="logo-card logo-card-front"><span class="logo-just">JUST</span><span class="logo-one">ONE</span></div>
+        <div class="logo-board">?</div>
+      </div>
       <h1>Just One <em>mobile</em></h1>
-      <p class="tagline">Le jeu coopératif où vous faites deviner un mot mystère<br>avec <strong>un seul mot</strong> d'indice — les doublons sont annulés&nbsp;!</p>
+      <p class="tagline">Le jeu coopératif où vous faites deviner un mot mystère avec <strong>un seul mot</strong> d'indice — les doublons sont annulés&nbsp;!</p>
     </div>
     <div class="home-actions" id="home-actions">
       <button class="btn btn-primary btn-big" id="btn-continue" style="display:none">▶ Continuer la partie</button>
@@ -53,6 +59,7 @@
       </div>
       <span class="bar-spacer"></span>
     </header>
+    <div class="card-track" id="card-track" aria-hidden="true"></div>
     <div class="players-chips" id="players-chips"></div>
     <main class="game-body" id="game-body"></main>
   </section>
