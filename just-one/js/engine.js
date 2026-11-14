@@ -112,13 +112,14 @@
     return { ok: true, clue: clue };
   }
 
-  function revealClues(state) {
+  function revealClues(state, opts) {
+    const cancel = !opts || opts.cancelDuplicates !== false;
     const counts = {};
     state.clues.forEach(function (c) { counts[c.normalized] = (counts[c.normalized] || 0) + 1; });
     const kept = [];
     const removed = [];
     state.clues.forEach(function (c) {
-      if (counts[c.normalized] > 1) { c.removed = true; removed.push(c); }
+      if (cancel && counts[c.normalized] > 1) { c.removed = true; removed.push(c); }
       else { c.removed = false; kept.push(c); }
     });
     return { kept: kept, removed: removed };
@@ -175,13 +176,14 @@
     return { ok: true, entry: entry };
   }
 
-  function botClues(card, count, rng) {
+  function botClues(card, count, rng, opts) {
     rng = rng || Math.random;
     if (!card || !Array.isArray(card.c) || card.c.length === 0) return [];
     const bank = shuffle(card.c, rng);
     const out = [];
     for (let i = 0; i < count && i < bank.length; i++) out.push(bank[i]);
-    if (out.length > 1 && rng() < 0.35) {
+    const forceDup = !opts || opts.forceDuplicate !== false;
+    if (forceDup && out.length > 1 && rng() < 0.35) {
       const src = Math.floor(rng() * out.length);
       const dst = Math.floor(rng() * out.length);
       out[dst] = out[src];

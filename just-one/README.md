@@ -7,7 +7,7 @@ Version mobile (PWA, 100 % statique, sans build ni dépendance) du jeu coopérat
 Deux façons de jouer, sur téléphone, sans compte ni installation :
 
 - **🤖 Solo** : tu es toujours le devineur, 3 robots écrivent chacun un indice d'un seul mot
-  (les doublons sont annulés automatiquement, comme dans le jeu de plateau).
+  (en solo, pas d'annulation des doublons entre robots : tous leurs indices sont montrés).
 - **👥 Entre amis** : 2 à 7 joueurs sur le même appareil (pass-and-play) — l'appli indique à qui
   passer le téléphone à chaque étape.
 - **🌐 En ligne** : 2 à 7 joueurs, **chacun sur son propre appareil**. L'hôte crée un salon et partage

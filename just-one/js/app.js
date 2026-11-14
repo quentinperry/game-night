@@ -294,9 +294,9 @@
     $('#btn-ready', body).addEventListener('click', function () {
       const card = E.currentCard(G);
       const botCount = G.players.length - 1;
-      const clues = E.botClues(card, botCount, Math.random);
+      const clues = E.botClues(card, botCount, Math.random, { forceDuplicate: false });
       for (let i = 0; i < clues.length; i++) E.addClue(G, i + 1, clues[i]);
-      ui.reveal = E.revealClues(G);
+      ui.reveal = E.revealClues(G, { cancelDuplicates: false }); // en solo, pas d'annulation
       ui.phase = 'solo-guess';
       save();
       renderGame();

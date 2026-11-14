@@ -147,6 +147,25 @@ test('mode solo : le devineur ne tourne pas (toujours le joueur 0)', () => {
   assert.equal(g.guesserIndex, 0);
 });
 
+test('revealClues avec cancelDuplicates:false conserve tous les indices (mode solo)', () => {
+  const g = game(31);
+  E.addClue(g, 1, 'animal');
+  E.addClue(g, 2, 'animal');
+  E.addClue(g, 3, 'aboie');
+  const r = E.revealClues(g, { cancelDuplicates: false });
+  assert.equal(r.kept.length, 3);
+  assert.equal(r.removed.length, 0);
+});
+
+test('botClues avec forceDuplicate:false renvoie des indices distincts', () => {
+  const card = { w: 'chien', c: ['animal', 'aboie', 'fidèle', 'laisse', 'os'] };
+  for (let i = 0; i < 200; i++) {
+    const clues = E.botClues(card, 3, mulberry32(1000 + i), { forceDuplicate: false });
+    assert.equal(clues.length, 3);
+    assert.equal(new Set(clues.map(E.normalize)).size, 3);
+  }
+});
+
 test('botClues renvoie des indices de la banque, parfois en double', () => {
   const card = { w: 'chien', c: ['animal', 'aboie', 'fidèle', 'laisse', 'os'] };
   let dupSeen = 0;
