@@ -189,6 +189,60 @@
     return shuffle(out, rng);
   }
 
+  const CODE_ALPHABET = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
+
+  function makeRoomCode(rng, len) {
+    rng = rng || Math.random;
+    len = len || 8;
+    let s = '';
+    for (let i = 0; i < len; i++) s += CODE_ALPHABET[Math.floor(rng() * CODE_ALPHABET.length)];
+    return s;
+  }
+
+  /* Vue "publique" de l'état envoyée à un joueur en ligne.
+     - ne contient jamais les mots de la pioche (deck), seulement leur nombre
+     - en phase 'guess', le devineur ne reçoit que les indices conservés
+     - en phase 'result', le mot de la manche écoulée est révélé (historique) */
+  function publicState(state, phase, forPlayerIndex, opts) {
+    opts = opts || {};
+    const isGuesser = forPlayerIndex === state.guesserIndex;
+    let clues = [];
+    let removedCount = 0;
+    if (phase === 'guess' && Array.isArray(state.clues)) {
+      const all = state.clues;
+      removedCount = all.filter(function (c) { return c.removed; }).length;
+      const visible = isGuesser ? all.filter(function (c) { return !c.removed; }) : all;
+      clues = visible.map(function (c) { return { text: c.text, removed: !!c.removed, player: c.player }; });
+    }
+    const last = state.history[state.history.length - 1] || null;
+    return {
+      phase: phase,
+      code: opts.code || '',
+      players: state.players.map(function (p) { return { name: p.name }; }),
+      you: forPlayerIndex,
+      isHost: !!opts.isHost,
+      hostName: opts.hostName || '',
+      guesserIndex: state.guesserIndex,
+      score: state.score,
+      cardNumber: cardNumber(state),
+      totalCards: TOTAL_CARDS,
+      deckCount: state.deck.length,
+      over: state.over,
+      clues: clues,
+      removedCount: removedCount,
+      myPending: opts.myPending || 0,
+      submittedCount: opts.submittedCount || 0,
+      giversTotal: opts.giversTotal || 0,
+      history: state.history.map(function (h) {
+        return {
+          word: h.word, result: h.result, guess: h.guess, cardsOut: h.cardsOut,
+          kept: h.clues.filter(function (c) { return !c.removed; }).length, total: h.clues.length
+        };
+      }),
+      result: (phase === 'result' && last) ? { word: last.word, result: last.result, guess: last.guess, cardsOut: last.cardsOut } : null
+    };
+  }
+
   function serialize(state) {
     return JSON.stringify({
       mode: state.mode,
@@ -242,6 +296,9 @@
     guess: guess,
     pass: pass,
     botClues: botClues,
+    makeRoomCode: makeRoomCode,
+    CODE_ALPHABET: CODE_ALPHABET,
+    publicState: publicState,
     serialize: serialize,
     deserialize: deserialize
   };

@@ -10,6 +10,12 @@ Deux façons de jouer, sur téléphone, sans compte ni installation :
   (les doublons sont annulés automatiquement, comme dans le jeu de plateau).
 - **👥 Entre amis** : 2 à 7 joueurs sur le même appareil (pass-and-play) — l'appli indique à qui
   passer le téléphone à chaque étape.
+- **🌐 En ligne** : 2 à 7 joueurs, **chacun sur son propre appareil**. L'hôte crée un salon et partage
+  un **code de partie** (8 caractères) ; les autres le rejoignent avec ce code. Les appareils se
+  connectent en **WebRTC direct** (data channel chiffré), la signalisation passe par le relais HTTP
+  public ntfy.sh (topic = code de partie) : aucun compte, aucun serveur de jeu, et l'hôte fait
+  autorité sur l'état — le mot en cours n'est jamais transmis aux clients (seul le nombre de cartes
+  restantes l'est), et le devineur ne reçoit pas les indices annulés.
 
 ## Règles implémentées
 
@@ -43,8 +49,9 @@ Puis « Ajouter à l'écran d'accueil » : l'appli devient installable et foncti
 index.html            structure des écrans + règles
 css/style.css         thème mobile (dark, tactile)
 js/words.js           banque de 226 mots FR (sélection inspirée de la liste Wikipédia « Articles que toutes les encyclopédies devraient avoir », mots trop simples du quotidien retirés) + indices d'un mot pour les robots
-js/engine.js          moteur pur (navigateur + Node) : manches, doublons, score, barème
-js/app.js             interface : écrans, pass-and-play, solo, sauvegarde
+js/engine.js          moteur pur (navigateur + Node) : manches, doublons, score, barème, vue publique (anti-fuite du mot)
+js/net.js             mode en ligne : WebRTC + signalisation ntfy.sh par code de partie
+js/app.js             interface : écrans, pass-and-play, solo, en ligne, sauvegarde
 manifest.webmanifest  + icon.svg + sw.js   packaging PWA / hors-ligne
 tests/                tests Node du moteur et de la banque de mots
 ```
