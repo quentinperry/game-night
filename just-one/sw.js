@@ -1,5 +1,5 @@
-/* Service worker Just One — Mobile : cache local pour jouer hors-ligne. */
-const CACHE = 'just-one-v2';
+/* Service worker de Just One mobile : cache local pour jouer hors-ligne. */
+const CACHE = 'just-one-v3';
 const ASSETS = [
   './',
   './index.html',
@@ -30,15 +30,16 @@ self.addEventListener('activate', function (event) {
 
 self.addEventListener('fetch', function (event) {
   if (event.request.method !== 'GET') return;
+  // Réseau d'abord, cache en secours : les mises à jour sont vues tout de suite, et le jeu reste jouable hors-ligne.
   event.respondWith(
-    caches.match(event.request, { ignoreSearch: true }).then(function (hit) {
-      return hit || fetch(event.request).then(function (resp) {
-        if (resp && resp.ok && new URL(event.request.url).origin === self.location.origin) {
-          const copy = resp.clone();
-          caches.open(CACHE).then(function (c) { c.put(event.request, copy); });
-        }
-        return resp;
-      });
+    fetch(event.request).then(function (resp) {
+      if (resp && resp.ok && new URL(event.request.url).origin === self.location.origin) {
+        const copy = resp.clone();
+        caches.open(CACHE).then(function (c) { c.put(event.request, copy); });
+      }
+      return resp;
+    }).catch(function () {
+      return caches.match(event.request, { ignoreSearch: true });
     })
   );
 });

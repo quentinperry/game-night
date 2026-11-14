@@ -8,8 +8,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Just One">
-<title>Just One — Mobile</title>
-<meta name="description" content="Just One en version mobile : joue solo contre des robots ou entre amis sur le même appareil. Jeu coopératif, 13 cartes, un seul mot d'indice.">
+<title>Just One mobile</title>
+<meta name="description" content="Just One sur mobile : jeu coopératif, 13 cartes, un seul mot d'indice. En solo contre des robots, entre amis ou en ligne.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon.svg">
@@ -28,17 +28,17 @@
         <div class="logo-board">?</div>
       </div>
       <h1>Just One <em>mobile</em></h1>
-      <p class="tagline">Le jeu coopératif où vous faites deviner un mot mystère avec <strong>un seul mot</strong> d'indice — les doublons sont annulés&nbsp;!</p>
+      <p class="tagline">Faites deviner un mot mystère avec <strong>un seul mot</strong> d'indice. Les doublons sont annulés&nbsp;!</p>
     </div>
     <div class="home-actions" id="home-actions">
-      <button class="btn btn-primary btn-big" id="btn-continue" style="display:none">▶ Continuer la partie</button>
-      <button class="btn btn-primary btn-big" id="btn-solo">🤖 Partie solo <small>(toi contre 3 robots)</small></button>
-      <button class="btn btn-secondary btn-big" id="btn-multi">👥 Entre amis <small>(2 à 7 joueurs, même appareil)</small></button>
-      <button class="btn btn-secondary btn-big" id="btn-online">🌐 En ligne <small>(code de partie, chacun sur son appareil)</small></button>
-      <button class="btn btn-ghost" id="btn-rules">📜 Règles du jeu</button>
+      <button class="btn btn-primary btn-big" id="btn-continue" style="display:none">Continuer la partie</button>
+      <button class="btn btn-primary btn-big" id="btn-solo">Partie solo <small>toi contre 3 robots</small></button>
+      <button class="btn btn-secondary btn-big" id="btn-multi">Entre amis <small>2 à 7 joueurs, même appareil</small></button>
+      <button class="btn btn-secondary btn-big" id="btn-online">En ligne <small>un appareil par joueur, avec un code</small></button>
+      <button class="btn btn-ghost" id="btn-rules">Règles du jeu</button>
       <p class="best-line" id="best-line"></p>
     </div>
-    <p class="footnote">Projet fan non officiel inspiré de <em>Just One</em> (Ludovic Roudy &amp; Bruno Sautter, Repos Production). Fonctionne hors-ligne après le premier chargement.</p>
+    <p class="footnote">Projet de fan non officiel, inspiré de <em>Just One</em> (Ludovic Roudy et Bruno Sautter, Repos Production). Fonctionne hors-ligne.</p>
   </section>
 
   <section id="screen-setup" class="screen">
@@ -72,25 +72,25 @@
 
 <div id="rules-overlay" class="overlay" hidden>
   <div class="overlay-card">
-    <button class="btn btn-ghost btn-small overlay-close" id="btn-rules-close">✕ Fermer</button>
-    <h2>📜 Règles de Just One</h2>
+    <button class="btn btn-ghost btn-small overlay-close" id="btn-rules-close">Fermer</button>
+    <h2>Règles</h2>
     <div class="rules-text">
-      <p><strong>But :</strong> en équipe, faites deviner un maximum de <strong>13 mots mystères</strong>. Chaque bonne réponse rapporte <strong>1 point</strong>.</p>
-      <p><strong>Déroulement d’une manche :</strong></p>
+      <p><strong>But :</strong> faire deviner ensemble un maximum de <strong>13 mots mystères</strong>. Chaque bonne réponse vaut <strong>1 point</strong>.</p>
+      <p><strong>Une manche :</strong></p>
       <ol>
-        <li>Un joueur est désigné <strong>devineur</strong> (à tour de rôle) : <strong>seul lui ne voit pas le mot</strong>, que tous les autres lisent.</li>
-        <li>Tous les autres écrivent <strong>en secret un seul mot</strong> comme indice, sans se concerter.</li>
-        <li>On révèle les indices : ceux écrits <strong>plusieurs fois à l’identique sont annulés et retirés</strong> — le devineur ne les voit pas.</li>
-        <li>Le devineur voit les indices restants et n’a droit qu’à <strong>une seule tentative</strong> — ou il peut <strong>passer</strong>.</li>
+        <li>Un joueur est le <strong>devineur</strong>, à tour de rôle. Lui seul ne voit pas le mot.</li>
+        <li>Les autres écrivent <strong>en secret un seul mot</strong> d’indice, sans se concerter.</li>
+        <li>Les indices identiques sont <strong>annulés</strong> : le devineur ne les voit pas.</li>
+        <li>Le devineur n’a droit qu’à <strong>une tentative</strong>, ou peut <strong>passer</strong>.</li>
       </ol>
-      <p><strong>Résultats :</strong></p>
+      <p><strong>Résultat :</strong></p>
       <ul>
-        <li>✅ Bonne réponse : <strong>+1 point</strong>, la carte est gagnée.</li>
-        <li>❌ Mauvaise réponse : la carte en cours <strong>et la suivante</strong> sont perdues.</li>
-        <li>🤐 Passer : seule la carte en cours est perdue.</li>
+        <li>Bonne réponse : <strong>+1 point</strong>.</li>
+        <li>Mauvaise réponse : la carte en cours <strong>et la suivante</strong> sont perdues.</li>
+        <li>Passer : seule la carte en cours est perdue.</li>
       </ul>
-      <p><strong>Variantes :</strong> à 2 ou 3 joueurs, chacun écrit <strong>2 indices</strong> par manche. En <strong>solo</strong> ici, tu es toujours le devineur et 3 robots écrivent les indices (sans annulation des doublons entre robots).</p>
-      <p><strong>Barème final</strong> (cartes gagnées sur 13) : 13 parfait 🏆 · 12 incroyable · 11 excellent · 9-10 très beau · 7-8 dans la moyenne · 4-6 bon début · 0-3 à retenter&nbsp;!</p>
+      <p><strong>Variantes :</strong> à 2 ou 3 joueurs, chacun écrit <strong>2 indices</strong>. En solo, tu es le devineur et 3 robots écrivent les indices, sans annulation des doublons.</p>
+      <p><strong>Barème :</strong> 13 parfait · 12 incroyable · 11 excellent · 9-10 très beau · 7-8 dans la moyenne · 4-6 bon début · 0-3 à retenter.</p>
     </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
 /* ==========================================================
-   Just One — Mobile · thème « soirée jeux »
+   Just One mobile, thème « soirée jeux »
    Fond nuit violette, cartes crème, indices au feutre.
    ========================================================== */
 
@@ -328,7 +328,7 @@ b, strong { font-weight: 600; }
 .progress b { color: var(--text); }
 
 /* Le mot mystère : une carte crème posée sur la table */
-.result-word { margin: 14px 0 4px; perspective: 600px; }
+.result-word { margin: 16px 0 18px; perspective: 600px; }
 .result-word span {
   display: inline-block; position: relative;
   min-width: 190px; max-width: 100%;

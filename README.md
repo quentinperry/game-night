@@ -2,4 +2,4 @@
 
 ## Jeux
 
-- **[Just One — Mobile](just-one/)** : version mobile (PWA, sans build) du jeu coopératif *Just One*. Partie solo contre 3 robots, ou entre amis (2 à 7 joueurs) en pass-and-play sur le même appareil. [Détails et règles](just-one/README.md)
+- **[Just One mobile](just-one/)** : jeu coopératif *Just One* en PWA, sans build. Solo contre 3 robots, entre amis sur le même appareil, ou en ligne. [Détails et règles](just-one/README.md)

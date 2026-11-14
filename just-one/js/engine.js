@@ -1,4 +1,4 @@
-/* Moteur de Just One (projet fan, non officiel) — logique pure, sans DOM.
+/* Moteur de Just One (projet de fan non officiel) : logique pure, sans DOM.
    Fonctionne dans le navigateur (window.JustOneEngine) et sous Node (module.exports). */
 (function (root, factory) {
   const api = factory();
@@ -42,8 +42,8 @@
   function validateClue(raw) {
     const cleaned = String(raw == null ? '' : raw).trim().replace(/\s+/g, ' ');
     if (!cleaned) return { ok: false, error: 'Écris un indice.' };
-    if (/\s/.test(cleaned)) return { ok: false, error: 'Un seul mot : pas d’espace !' };
-    if (!CLUE_RE.test(cleaned)) return { ok: false, error: 'Un seul mot (lettres, tiret ou apostrophe uniquement).' };
+    if (/\s/.test(cleaned)) return { ok: false, error: 'Un seul mot, sans espace.' };
+    if (!CLUE_RE.test(cleaned)) return { ok: false, error: 'Lettres, tiret ou apostrophe uniquement.' };
     return { ok: true, value: cleaned, normalized: normalize(cleaned) };
   }
 
