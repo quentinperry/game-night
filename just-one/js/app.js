@@ -168,11 +168,13 @@
     if (!G) { renderHome(); return; }
     $('#stat-card').textContent = 'Carte ' + E.cardNumber(G) + '/' + E.TOTAL_CARDS;
     $('#stat-score').textContent = 'Score ' + G.score;
+    renderTrack(G.history, E.TOTAL_CARDS, false);
     const chips = $('#players-chips');
     chips.innerHTML = '';
     G.players.forEach(function (p, i) {
       const c = document.createElement('span');
       c.className = 'chip' + (i === G.guesserIndex ? ' guesser' : '');
+      c.style.setProperty('--pc', 'var(--p' + (i % 7) + ')');
       c.textContent = (i === G.guesserIndex ? '👑 ' : (p.bot ? '🤖 ' : '')) + p.name;
       chips.appendChild(c);
     });
@@ -186,6 +188,25 @@
     if (phase === 'guess' || phase === 'solo-guess') return renderGuess(body);
     if (phase === 'solo-ready') return renderSoloReady(body);
     if (phase === 'result') return renderResult(body);
+  }
+
+  /* Piste des 13 cartes : résultat de chaque carte jouée + carte en cours. */
+  function renderTrack(history, total, hidden) {
+    const el = $('#card-track');
+    if (!el) return;
+    el.hidden = !!hidden;
+    if (hidden) return;
+    const cells = [];
+    (history || []).forEach(function (h) {
+      cells.push(h.result);
+      for (let k = 1; k < (h.cardsOut || 1); k++) cells.push('lost');
+    });
+    let html = '';
+    for (let i = 0; i < total; i++) {
+      const r = cells[i];
+      html += '<i class="' + (r ? 't-' + r : (i === cells.length ? 't-current' : '')) + '"></i>';
+    }
+    el.innerHTML = html;
   }
 
   function panel(html) {
@@ -221,7 +242,7 @@
       '<div class="progress">Indice ' + (ui.pos + 1) + ' / ' + total + '</div>' +
       '<div class="eyes">✍️</div>' +
       '<h2>Passe l’appareil à <span class="big-name">' + esc(giver.name) + '</span></h2>' +
-      '<div class="result-word">« ' + esc(E.currentCard(G).w) + ' »</div>' +
+      '<div class="result-word"><span>' + esc(E.currentCard(G).w) + '</span></div>' +
       '<p class="result-detail">Mot à faire deviner — ne le montre pas au devineur (' + esc(E.guesser(G).name) + ') !</p>' +
       '<p>Écris <b>un seul mot</b> pour aider <b>' + esc(E.guesser(G).name) + '</b> à deviner.<br>Pas de concertation, et évite l’indice trop évident… les doublons sont annulés !</p>' +
       '<input class="clue-input" id="clue-input" maxlength="30" placeholder="ton indice" autocomplete="off" autocapitalize="off">' +
@@ -266,7 +287,7 @@
     const g = E.guesser(G);
     const p = panel(
       '<div class="eyes">🃏</div>' +
-      '<div class="result-word">« ' + esc(E.currentCard(G).w) + ' »</div>' +
+      '<div class="result-word"><span>' + esc(E.currentCard(G).w) + '</span></div>' +
       '<p class="result-detail">Mot à faire deviner</p>' +
       '<h2>Tous les indices sont écrits !</h2>' +
       '<p>Les indices identiques ont été <b>annulés</b> (barrés ci-dessous).</p>'
@@ -314,7 +335,7 @@
     const chips = document.createElement('div');
     chips.className = 'clue-chips';
     if (rev.kept.length === 0) {
-      chips.innerHTML = '<span class="clue-chip" style="background:var(--bad);color:#fff">😱 Aucun !</span>';
+      chips.innerHTML = '<span class="clue-chip clue-none">😱 Aucun !</span>';
     } else {
       rev.kept.forEach(function (c) {
         const s = document.createElement('span');
@@ -388,7 +409,7 @@
       '<div class="emoji">' + emoji + '</div><h2>' + title + '</h2>' +
       '<p>' + (e.result === 'wrong' && e.guess ? 'Ta réponse : « ' + esc(e.guess) + ' »' : '') + '</p>' +
       '</div>' +
-      '<div class="result-word">« ' + esc(e.word) + ' »</div>' +
+      '<div class="result-word"><span>' + esc(e.word) + '</span></div>' +
       '<p class="result-detail">' + detail + '</p>' +
       '<p class="result-detail">Score : <b style="color:var(--accent)">' + G.score + ' / ' + E.TOTAL_CARDS + '</b> · cartes restantes : ' + G.deck.length + '</p>'
     );
@@ -417,8 +438,8 @@
     }).join('');
     $('#end-body').innerHTML =
       '<div class="end-score-card">' +
-      '<div style="font-size:15px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase">Score final</div>' +
-      '<div class="end-score">' + G.score + '<small> / ' + E.TOTAL_CARDS + '</small></div>' +
+      '<div class="end-kicker">Score final</div>' +
+      '<div class="end-ring" style="--p:' + (G.score / E.TOTAL_CARDS) + '"><div class="end-score">' + G.score + '<small>/' + E.TOTAL_CARDS + '</small></div></div>' +
       '<div class="end-rating">' + rating.emoji + ' ' + rating.label + '</div>' +
       '<div class="end-best">🏅 Record : ' + best() + '/' + E.TOTAL_CARDS + '</div>' +
       '</div>' +
@@ -610,11 +631,13 @@
     const inLobby = v.phase === 'lobby';
     $('#stat-card').textContent = inLobby ? '🌐 Salon ' + (v.code || '') : 'Carte ' + v.cardNumber + '/' + v.totalCards;
     $('#stat-score').textContent = 'Score ' + v.score;
+    renderTrack(v.history, v.totalCards, inLobby);
     const chips = $('#players-chips');
     chips.innerHTML = '';
     v.players.forEach(function (p, i) {
       const c = document.createElement('span');
       c.className = 'chip' + (!inLobby && i === v.guesserIndex ? ' guesser' : '');
+      c.style.setProperty('--pc', 'var(--p' + (i % 7) + ')');
       c.textContent = (i === v.you ? '● ' : '') + (!inLobby && i === v.guesserIndex ? '👑 ' : '') + p.name;
       chips.appendChild(c);
     });
@@ -631,7 +654,7 @@
     const p = panel(
       '<div class="eyes">🌐</div><h2>Salon en ligne</h2>' +
       '<p>Partage ce code avec tes amis :</p>' +
-      '<div style="font-size:36px;font-weight:900;letter-spacing:6px;color:var(--accent);margin:10px 0">' + esc(v.code) + '</div>'
+      '<div class="room-code">' + esc(v.code) + '</div>'
     );
     const copy = document.createElement('button');
     copy.className = 'btn btn-ghost btn-small';
@@ -677,7 +700,7 @@
         '<div class="progress">Indices écrits : ' + v.submittedCount + ' / ' + v.giversTotal + '</div>' +
         '<div class="eyes">✍️</div>' +
         '<h2>À toi, ' + esc(v.players[v.you].name) + ' !</h2>' +
-        '<div class="result-word">« ' + esc(v.word || '') + ' »</div>' +
+        '<div class="result-word"><span>' + esc(v.word || '') + '</span></div>' +
         '<p class="result-detail">Mot à faire deviner</p>' +
         '<p>Écris <b>un seul mot</b> pour aider <b>' + esc(v.players[v.guesserIndex].name) + '</b> à deviner.<br>Les doublons seront annulés !</p>' +
         '<input class="clue-input" id="online-clue" maxlength="30" placeholder="ton indice" autocomplete="off" autocapitalize="off">' +
@@ -704,7 +727,7 @@
     } else {
       body.appendChild(panel(
         '<div class="eyes">⏳</div>' +
-        '<div class="result-word">« ' + esc(v.word || '') + ' »</div>' +
+        '<div class="result-word"><span>' + esc(v.word || '') + '</span></div>' +
         '<p class="result-detail">Mot à faire deviner</p>' +
         '<h2>En attente des indices…</h2>' +
         '<p>' + v.submittedCount + ' / ' + v.giversTotal + ' écrits.<br>Devineur : <b>' + esc(v.players[v.guesserIndex].name) + '</b></p>'
@@ -717,7 +740,7 @@
     if (!isGuesser) {
       const p = panel(
         '<div class="eyes">🃏</div>' +
-        '<div class="result-word">« ' + esc(v.word || '') + ' »</div>' +
+        '<div class="result-word"><span>' + esc(v.word || '') + '</span></div>' +
         '<p class="result-detail">Mot à faire deviner</p>' +
         '<h2>Les indices écrits</h2>' +
         '<p>Devineur : <b>' + esc(v.players[v.guesserIndex].name) + '</b> réfléchit…</p>'
@@ -743,7 +766,7 @@
     const chips = document.createElement('div');
     chips.className = 'clue-chips';
     if (!v.clues.length) {
-      chips.innerHTML = '<span class="clue-chip" style="background:var(--bad);color:#fff">😱 Aucun !</span>';
+      chips.innerHTML = '<span class="clue-chip clue-none">😱 Aucun !</span>';
     } else {
       v.clues.forEach(function (c) {
         const s = document.createElement('span');
@@ -790,7 +813,7 @@
     const p = panel(
       '<div class="result-banner ' + cls + '"><div class="emoji">' + emoji + '</div><h2>' + title + '</h2>' +
       (r.guess ? '<p>Réponse donnée : « ' + esc(r.guess) + ' »</p>' : '') + '</div>' +
-      '<div class="result-word">« ' + esc(r.word || '') + ' »</div>' +
+      '<div class="result-word"><span>' + esc(r.word || '') + '</span></div>' +
       '<p class="result-detail">' + detail + '</p>' +
       '<p class="result-detail">Score : <b style="color:var(--accent)">' + v.score + ' / ' + v.totalCards + '</b> · cartes restantes : ' + v.deckCount + '</p>'
     );
@@ -813,8 +836,8 @@
     const d = document.createElement('div');
     d.innerHTML =
       '<div class="end-score-card">' +
-      '<div style="font-size:15px;color:var(--muted);font-weight:700;letter-spacing:1px;text-transform:uppercase">Score final</div>' +
-      '<div class="end-score">' + v.score + '<small> / ' + v.totalCards + '</small></div>' +
+      '<div class="end-kicker">Score final</div>' +
+      '<div class="end-ring" style="--p:' + (v.score / v.totalCards) + '"><div class="end-score">' + v.score + '<small>/' + v.totalCards + '</small></div></div>' +
       '<div class="end-rating">' + rating.emoji + ' ' + rating.label + '</div></div>' +
       '<div class="history"><div class="history-title">Détail des ' + v.history.length + ' manches</div>' + rows + '</div>' +
       '<div class="btn-row"><button class="btn btn-ghost" id="online-home">🏠 Accueil</button>' +

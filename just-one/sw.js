@@ -1,5 +1,5 @@
 /* Service worker Just One — Mobile : cache local pour jouer hors-ligne. */
-const CACHE = 'just-one-v1';
+const CACHE = 'just-one-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -9,7 +9,9 @@ const ASSETS = [
   './js/net.js',
   './js/app.js',
   './manifest.webmanifest',
-  './icon.svg'
+  './icon.svg',
+  './fonts/fredoka.woff2',
+  './fonts/caveat-brush.woff2'
 ];
 
 self.addEventListener('install', function (event) {

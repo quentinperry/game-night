@@ -47,7 +47,8 @@ Puis « Ajouter à l'écran d'accueil » : l'appli devient installable et foncti
 
 ```
 index.html            structure des écrans + règles
-css/style.css         thème mobile (dark, tactile)
+css/style.css         thème « soirée jeux » : fond nuit violette, cartes crème, indices au feutre
+fonts/                Fredoka + Caveat Brush (woff2 auto-hébergées, licence SIL OFL — fonts/OFL.txt)
 js/words.js           banque de 573 mots FR (sélection inspirée des listes Wikipédia « Articles vitaux » niveaux 2-3, mots trop simples du quotidien retirés) + indices d'un mot pour les robots
 js/engine.js          moteur pur (navigateur + Node) : manches, doublons, score, barème, vue publique (anti-fuite du mot)
 js/net.js             mode en ligne : WebRTC + signalisation ntfy.sh par code de partie
