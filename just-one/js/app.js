@@ -114,11 +114,10 @@
       }
       function refresh() {
         $('#step-val').textContent = setupCount;
-        const inputs = grid.querySelectorAll('.name-input');
-        while (inputs.length < setupCount) {
+        while (grid.children.length < setupCount) {
           const d = document.createElement('div');
           d.className = 'field';
-          d.innerHTML = '<input class="name-input" maxlength="14" value="Joueur ' + (inputs.length + 1) + '" autocomplete="off">';
+          d.innerHTML = '<input class="name-input" maxlength="14" value="Joueur ' + (grid.children.length + 1) + '" autocomplete="off">';
           grid.appendChild(d);
         }
         while (grid.children.length > setupCount) grid.removeChild(grid.lastChild);
