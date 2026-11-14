@@ -301,9 +301,11 @@
     }
     p.appendChild(chips);
     if (rev.removed.length) {
+      const n = rev.removed.length;
+      const s = n > 1 ? 's' : '';
       const line = document.createElement('p');
       line.className = 'removed-line';
-      line.innerHTML = 'Annulés (doublons) : ' + rev.removed.map(function (c) { return '<s>' + esc(c.text) + '</s>'; }).join(', ');
+      line.textContent = '🚫 ' + n + ' indice' + s + ' annulé' + s + ' (doublon' + s + ') — retiré' + s + ' avant de te montrer les indices.';
       p.appendChild(line);
     }
     p.insertAdjacentHTML('beforeend',
