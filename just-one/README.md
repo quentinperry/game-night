@@ -20,7 +20,7 @@ Deux façons de jouer, sur téléphone, sans compte ni installation :
 ## Règles implémentées
 
 - 13 cartes par partie, un devineur à tour de rôle (toujours toi en solo).
-- Chaque autre joueur écrit **un seul mot** d'indice, en secret.
+- Chaque autre joueur, **en voyant le mot**, écrit **un seul mot** d'indice, en secret.
 - Les indices **identiques sont annulés** avant d'être montrés au devineur.
 - Le devineur n'a droit qu'à **une seule tentative**, ou peut **passer**.
 - ✅ Bonne réponse : +1 point · ❌ mauvaise réponse : la carte en cours **et la suivante** sont perdues

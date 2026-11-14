@@ -222,6 +222,8 @@
       '<div class="progress">Indice ' + (ui.pos + 1) + ' / ' + total + '</div>' +
       '<div class="eyes">✍️</div>' +
       '<h2>Passe l’appareil à <span class="big-name">' + esc(giver.name) + '</span></h2>' +
+      '<div class="result-word">« ' + esc(E.currentCard(G).w) + ' »</div>' +
+      '<p class="result-detail">Mot à faire deviner — ne le montre pas au devineur (' + esc(E.guesser(G).name) + ') !</p>' +
       '<p>Écris <b>un seul mot</b> pour aider <b>' + esc(E.guesser(G).name) + '</b> à deviner.<br>Pas de concertation, et évite l’indice trop évident… les doublons sont annulés !</p>' +
       '<input class="clue-input" id="clue-input" maxlength="30" placeholder="ton indice" autocomplete="off" autocapitalize="off">' +
       '<div class="field-error" id="clue-error"></div>' +
@@ -265,6 +267,8 @@
     const g = E.guesser(G);
     const p = panel(
       '<div class="eyes">🃏</div>' +
+      '<div class="result-word">« ' + esc(E.currentCard(G).w) + ' »</div>' +
+      '<p class="result-detail">Mot à faire deviner</p>' +
       '<h2>Tous les indices sont écrits !</h2>' +
       '<p>Les indices identiques ont été <b>annulés</b> (barrés ci-dessous).</p>'
     );
@@ -674,6 +678,8 @@
         '<div class="progress">Indices écrits : ' + v.submittedCount + ' / ' + v.giversTotal + '</div>' +
         '<div class="eyes">✍️</div>' +
         '<h2>À toi, ' + esc(v.players[v.you].name) + ' !</h2>' +
+        '<div class="result-word">« ' + esc(v.word || '') + ' »</div>' +
+        '<p class="result-detail">Mot à faire deviner</p>' +
         '<p>Écris <b>un seul mot</b> pour aider <b>' + esc(v.players[v.guesserIndex].name) + '</b> à deviner.<br>Les doublons seront annulés !</p>' +
         '<input class="clue-input" id="online-clue" maxlength="30" placeholder="ton indice" autocomplete="off" autocapitalize="off">' +
         '<div class="field-error" id="online-clue-error"></div>'
@@ -698,7 +704,10 @@
       input.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); submit(); } });
     } else {
       body.appendChild(panel(
-        '<div class="eyes">⏳</div><h2>En attente des indices…</h2>' +
+        '<div class="eyes">⏳</div>' +
+        '<div class="result-word">« ' + esc(v.word || '') + ' »</div>' +
+        '<p class="result-detail">Mot à faire deviner</p>' +
+        '<h2>En attente des indices…</h2>' +
         '<p>' + v.submittedCount + ' / ' + v.giversTotal + ' écrits.<br>Devineur : <b>' + esc(v.players[v.guesserIndex].name) + '</b></p>'
       ));
     }
@@ -708,7 +717,10 @@
     const isGuesser = v.you === v.guesserIndex;
     if (!isGuesser) {
       const p = panel(
-        '<div class="eyes">🃏</div><h2>Les indices écrits</h2>' +
+        '<div class="eyes">🃏</div>' +
+        '<div class="result-word">« ' + esc(v.word || '') + ' »</div>' +
+        '<p class="result-detail">Mot à faire deviner</p>' +
+        '<h2>Les indices écrits</h2>' +
         '<p>Devineur : <b>' + esc(v.players[v.guesserIndex].name) + '</b> réfléchit…</p>'
       );
       const list = document.createElement('div');

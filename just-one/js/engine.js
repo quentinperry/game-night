@@ -215,8 +215,10 @@
       clues = visible.map(function (c) { return { text: c.text, removed: !!c.removed, player: c.player }; });
     }
     const last = state.history[state.history.length - 1] || null;
+    const card = currentCard(state);
     return {
       phase: phase,
+      word: (card && !isGuesser && phase !== 'result') ? card.w : null,
       code: opts.code || '',
       players: state.players.map(function (p) { return { name: p.name }; }),
       you: forPlayerIndex,

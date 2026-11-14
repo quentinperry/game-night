@@ -33,13 +33,31 @@ test('makeRoomCode : 8 caractères par défaut, alphabet sans ambiguïté', () =
   assert.equal(codes.size, 200);
 });
 
-test('publicState ne fuite jamais les mots de la pioche', () => {
+test('publicState : le devineur ne reçoit jamais le mot, les autres oui', () => {
   const g = game(5);
   const secret = E.currentCard(g).w;
-  const view = E.publicState(g, 'clues', 1, {});
-  assert.ok(!JSON.stringify(view).includes(secret), 'le mot en cours ne doit pas apparaître dans la vue');
-  assert.equal(view.deckCount, g.deck.length);
-  assert.equal(view.clues.length, 0, 'pas d’indices visibles pendant la phase d’écriture');
+  const guesserView = E.publicState(g, 'clues', g.guesserIndex, {});
+  assert.equal(guesserView.word, null);
+  assert.ok(!JSON.stringify(guesserView).includes(secret), 'le devineur ne doit rien voir du mot en cours');
+  for (const c of g.deck.slice(1)) {
+    assert.ok(!JSON.stringify(guesserView).includes(c.w), 'aucune carte de la pioche ne fuite');
+  }
+  const otherView = E.publicState(g, 'clues', 1, {});
+  assert.equal(otherView.word, secret, 'les donneurs d’indices voient le mot à faire deviner');
+  for (const c of g.deck.slice(1)) {
+    assert.ok(!JSON.stringify(otherView).includes(c.w), 'seul le mot en cours est visible, pas la pioche');
+  }
+  assert.equal(otherView.deckCount, g.deck.length);
+  assert.equal(otherView.clues.length, 0, 'pas d’indices visibles pendant la phase d’écriture');
+});
+
+test('publicState en phase guess : le mot reste visible pour les non-devineurs, caché au devineur', () => {
+  const g = game(9);
+  E.addClue(g, 1, 'indice');
+  E.revealClues(g);
+  const secret = E.currentCard(g).w;
+  assert.equal(E.publicState(g, 'guess', g.guesserIndex, {}).word, null);
+  assert.equal(E.publicState(g, 'guess', 2, {}).word, secret);
 });
 
 test('publicState en phase guess : le devineur ne voit pas les doublons', () => {
