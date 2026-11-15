@@ -1,5 +1,5 @@
 /* Service worker de Just One mobile : cache local pour jouer hors-ligne. */
-const CACHE = 'just-one-v3';
+const CACHE = 'just-one-v4';
 const ASSETS = [
   './',
   './index.html',
@@ -10,6 +10,10 @@ const ASSETS = [
   './js/app.js',
   './manifest.webmanifest',
   './icon.svg',
+  './icon-180.png',
+  './icon-192.png',
+  './icon-512.png',
+  './icon-maskable-512.png',
   './fonts/fredoka.woff2',
   './fonts/caveat-brush.woff2'
 ];
