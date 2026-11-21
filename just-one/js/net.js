@@ -9,9 +9,12 @@
 })(typeof self !== 'undefined' ? self : globalThis, function () {
   'use strict';
 
-  const SIGNAL_BASE = 'https://ntfy.sh/';
+  // Surchargeable (tests, relais auto-hébergé) via window.JUST_ONE_SIGNAL_BASE.
+  const SIGNAL_BASE = (typeof self !== 'undefined' && self.JUST_ONE_SIGNAL_BASE) || 'https://ntfy.sh/';
   const APP_PREFIX = 'just-one-v1';
   const MAX_PLAYERS = 7;
+  const GATHER_TIMEOUT = 4000;   // attente max des candidats ICE avant d'envoyer l'offre / la réponse
+  const STALE_PEER_MS = 10000;   // une connexion non ouverte après ce délai est relancée
   const RTC_CONFIG = {
     iceServers: [
       { urls: 'stun:stun.l.google.com:19302' },
@@ -50,21 +53,42 @@
     this.es = null;
     this._helloTimer = null;
     this._joinTimer = null;
+    this.closed = false;
     this._start();
   }
 
-  GameNet.prototype._publish = function (msg) {
+  // Publie un message de signalisation ; réessaie si le relais refuse (limite de débit) ou ne répond pas.
+  GameNet.prototype._publish = function (msg, attempt) {
+    const self = this;
+    attempt = attempt || 0;
     msg.from = this.id;
     return fetch(SIGNAL_BASE + this.topic, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain; charset=utf-8' },
       body: JSON.stringify(msg)
-    }).catch(function () {});
+    }).then(function (r) {
+      if (!r.ok) throw new Error('http ' + r.status);
+    }).catch(function () {
+      if (attempt < 3 && !self.closed) setTimeout(function () { self._publish(msg, attempt + 1); }, 1500 * (attempt + 1));
+    });
   };
+
+  // Attend la fin de la collecte ICE : l'offre/la réponse contient alors tous les candidats
+  // et on évite d'envoyer une rafale de messages (ordre non garanti, limite de débit du relais).
+  function whenGathered(pc) {
+    return new Promise(function (resolve) {
+      if (pc.iceGatheringState === 'complete') return resolve();
+      const done = function () { clearTimeout(t); pc.removeEventListener('icegatheringstatechange', check); resolve(); };
+      const check = function () { if (pc.iceGatheringState === 'complete') done(); };
+      const t = setTimeout(done, GATHER_TIMEOUT);
+      pc.addEventListener('icegatheringstatechange', check);
+    });
+  }
 
   GameNet.prototype._start = function () {
     const self = this;
-    this.es = new EventSource(SIGNAL_BASE + this.topic + '/json');
+    // /sse : flux Server-Sent Events de ntfy (/json n'est pas un flux EventSource). since=30s rattrape un message publié juste avant l'abonnement.
+    this.es = new EventSource(SIGNAL_BASE + this.topic + '/sse?since=30s');
     this.es.addEventListener('message', function (ev) {
       let m;
       try { m = JSON.parse(JSON.parse(ev.data).message); } catch (e) { return; }
@@ -96,6 +120,12 @@
       if (!this.isHost) return;
       if (Object.keys(this.dcs).length >= MAX_PLAYERS - 1) { this._publish({ type: 'full', to: m.from }); return; }
       this.names[m.from] = String(m.name || 'Joueur').slice(0, 14);
+      const old = this.pcs[m.from];
+      if (old) {
+        const open = this.dcs[m.from] && this.dcs[m.from].readyState === 'open';
+        if (open || Date.now() - old._born < STALE_PEER_MS) return;
+        this._dropPeer(m.from);   // offre perdue ou connexion bloquée : on recommence
+      }
       this._makeOffer(m.from);
       return;
     }
@@ -117,43 +147,34 @@
       }
       return;
     }
-    if (m.type === 'ice') {
-      if (m.to !== this.id) return;
-      const pc = this.pcs[m.from];
-      if (pc && m.candidate) pc.addIceCandidate(new RTCIceCandidate(m.candidate)).catch(function () {});
-    }
-  };
-
-  GameNet.prototype._wireIce = function (pc, otherId) {
-    const self = this;
-    pc.onicecandidate = function (e) {
-      if (e.candidate) {
-        self._publish({ type: 'ice', to: otherId, candidate: e.candidate.toJSON ? e.candidate.toJSON() : e.candidate });
-      }
-    };
   };
 
   GameNet.prototype._makeOffer = function (peerId) {
     const self = this;
     if (this.pcs[peerId]) return;
     const pc = new RTCPeerConnection(RTC_CONFIG);
+    pc._born = Date.now();
     this.pcs[peerId] = pc;
-    this._wireIce(pc, peerId);
     const dc = pc.createDataChannel('game');
     this.dcs[peerId] = dc;
     this._wireDc(dc, peerId);
     pc.createOffer()
       .then(function (offer) { return pc.setLocalDescription(offer); })
+      .then(function () { return whenGathered(pc); })
       .then(function () { self._publish({ type: 'offer', to: peerId, sdp: pc.localDescription }); })
       .catch(function () { self._dropPeer(peerId); });
   };
 
   GameNet.prototype._acceptOffer = function (m) {
     const self = this;
-    if (this.pcs[m.from]) return;
+    const old = this.pcs[m.from];
+    if (old) {
+      if (this.connected || old._offer === m.sdp.sdp) return;   // offre déjà traitée (relecture)
+      try { old.close(); } catch (e) {}                          // nouvelle offre de l'hôte : on repart
+    }
     const pc = new RTCPeerConnection(RTC_CONFIG);
+    pc._offer = m.sdp.sdp;
     this.pcs[m.from] = pc;
-    this._wireIce(pc, m.from);
     pc.ondatachannel = function (e) {
       self.dcs[m.from] = e.channel;
       self._wireDc(e.channel, m.from);
@@ -161,6 +182,7 @@
     pc.setRemoteDescription(new RTCSessionDescription(m.sdp))
       .then(function () { return pc.createAnswer(); })
       .then(function (answer) { return pc.setLocalDescription(answer); })
+      .then(function () { return whenGathered(pc); })
       .then(function () { self._publish({ type: 'answer', to: m.from, sdp: pc.localDescription }); })
       .catch(function () { self._dropPeer(m.from); });
   };
@@ -210,6 +232,7 @@
   };
 
   GameNet.prototype.close = function () {
+    this.closed = true;
     if (this.isHost) this._publish({ type: 'bye' });
     clearInterval(this._helloTimer);
     clearTimeout(this._joinTimer);
